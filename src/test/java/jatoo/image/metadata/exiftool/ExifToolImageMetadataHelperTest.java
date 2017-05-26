@@ -32,8 +32,6 @@ import jatoo.image.ImageMetadataHandler;
  */
 public class ExifToolImageMetadataHelperTest {
 
-  private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
-
   private static final String image1 = "target\\test-classes\\jatoo\\image\\metadata\\20141109144518-0.jpg";
   private static final String image2 = "target\\test-classes\\jatoo\\image\\metadata\\20141109144518-400x300.jpg";
 
@@ -64,12 +62,18 @@ public class ExifToolImageMetadataHelperTest {
   @Test
   public void test3() throws Throwable {
 
-    Date date1 = new Date();
+    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+
+    Date date1, date2;
+
+    date1 = new Date();
     handler.setDateTimeOriginal(image2, date1);
+    date2 = handler.getDateTimeOriginal(image2);
+    Assert.assertEquals(dateFormatter.format(date1), dateFormatter.format(date2));
 
-    Date date2 = handler.getDateTimeOriginal(image2);
-
-    Assert.assertEquals(SDF.format(date1), SDF.format(date2));
+    handler.setDateTimeOriginal(image2, 2011, 11, 11, 11, 11, 11);
+    date2 = handler.getDateTimeOriginal(image2);
+    Assert.assertEquals("2011:11:11 11:11:11", dateFormatter.format(date2));
   }
 
 }
