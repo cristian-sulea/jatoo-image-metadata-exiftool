@@ -16,45 +16,46 @@
 
 package jatoo.image.metadata.exiftool;
 
-import java.io.File;
+import java.util.Date;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 
-import jatoo.image.ImageMetadata;
 import jatoo.image.ImageMetadataHandler;
 
 /**
  * JUnit tests for {@link ExifToolImageMetadataHelper}.
  * 
  * @author <a href="http://cristian.sulea.net" rel="author">Cristian Sulea</a>
- * @version 1.0, May 23, 2017
+ * @version 1.0, May 26, 2017
  */
 public class ExifToolImageMetadataHelperTest {
 
-  @Before
-  public void initialize() throws Throwable {
-    new File("target\\CommandExecutorTest.java").delete();
-    new File("target\\CommandExecutorTest.txt").delete();
-  }
+  private static final String image1 = "target\\test-classes\\jatoo\\image\\metadata\\20141109144518-0.jpg";
+  private static final String image2 = "target\\test-classes\\jatoo\\image\\metadata\\20141109144518-400x300.jpg";
 
-  @After
-  public void cleanup() throws Throwable {
-    new File("target\\CommandExecutorTest.java").delete();
-    new File("target\\CommandExecutorTest.txt").delete();
-  }
+  private ImageMetadataHandler handler = ImageMetadataHandler.getInstance();
 
   @Test
   public void test1() throws Throwable {
 
-    ImageMetadataHandler handler = ImageMetadataHandler.getInstance();
+    Date date1 = handler.getMetadata(image1).getDateTimeOriginal();
+    Date date2 = handler.getDateTimeOriginal(image1);
 
-    ImageMetadata metadata = handler.getMetadata(new File("target\\test-classes\\jatoo\\image\\metadata\\20141109144518 1.jpg"));
+    Assert.assertEquals(date1, date2);
+  }
 
-    System.out.println(metadata.getDateTimeOriginal());
+  @Test
+  public void test2() throws Throwable {
 
-    System.out.println(handler.getDateTaken("target\\test-classes\\jatoo\\image\\metadata\\20141109144518 1.jpg"));
+    handler.copyMetadata(image1, image2);
+
+    Assert.assertNotNull(handler.getDateTimeOriginal(image2));
+
+    Date date1 = handler.getMetadata(image1).getDateTimeOriginal();
+    Date date2 = handler.getDateTimeOriginal(image2);
+
+    Assert.assertEquals(date1, date2);
   }
 
 }

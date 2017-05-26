@@ -21,7 +21,7 @@ import jatoo.image.ImageMetadataHandler;
  * ExifTool {@link ImageMetadataHelper} implementation.
  * 
  * @author <a href="http://cristian.sulea.net" rel="author">Cristian Sulea</a>
- * @version 1.0-SNAPSHOT, May 24, 2017
+ * @version 1.0-SNAPSHOT, May 26, 2017
  */
 public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
 
@@ -93,6 +93,10 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
     }
   }
 
+  private static String fileToArgument(File file) {
+    return "\"" + file.getAbsolutePath() + "\"";
+  }
+
   //
   // ---
   //
@@ -102,7 +106,7 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
   @Override
   public ImageMetadata getMetadata(final File image) {
 
-    String exec = exec("-S", "\"" + image.getAbsolutePath() + "\"");
+    String exec = exec("-S", fileToArgument(image));
 
     if (exec == null) {
       return null;
@@ -138,9 +142,9 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
   }
 
   @Override
-  public Date getDateTaken(File image) {
+  public Date getDateTimeOriginal(File image) {
 
-    String exec = exec("-DateTimeOriginal", "-s", "-S", "\"" + image.getAbsolutePath() + "\"");
+    String exec = exec("-DateTimeOriginal", "-s", "-S", fileToArgument(image));
 
     if (exec == null) {
       return null;
@@ -158,10 +162,16 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
 
   @Override
   public boolean copyMetadata(File srcImage, File dstImage) {
-    // exiftool
-    System.out.println(exec("-tagsfromfile " + srcImage.getAbsolutePath() + " -all:all -overwrite_original 400x300.jpg"));
-    
-    return true;
+
+    String exec = exec("-tagsfromfile", fileToArgument(srcImage), "-all:all", "-overwrite_original", fileToArgument(dstImage));
+
+    if (exec == null) {
+      return false;
+    }
+
+    else {
+      return true;
+    }
   }
 
 }
