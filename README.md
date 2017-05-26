@@ -1,2 +1,2 @@
 # jatoo-image-metadata-exiftool
-ExifTool "ImageMetadataHelper" implementation.
+ExifTool implementation for the image metadata helper.

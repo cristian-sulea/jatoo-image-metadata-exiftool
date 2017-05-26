@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+
+  <parent>
+    <groupId>net.sulea.cristian</groupId>
+    <artifactId>jatoo</artifactId>
+    <relativePath>../jatoo/pom.xml</relativePath>
+    <version>5.0</version>
+  </parent>
+
+  <artifactId>jatoo-image-metadata-exiftool</artifactId>
+  <packaging>jar</packaging>
+
+
+  <name>JaToo Image Metadata</name>
+  <description>ExifTool implementation for the image metadata helper.</description>
+  <url>http://cristian.sulea.net/projects/jatoo-image-metadata-exiftool/</url>
+
+  <inceptionYear>2017</inceptionYear>
+
+
+  <organization>
+    <name>Cristian Sulea</name>
+    <url>http://cristian.sulea.net</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>cristian.sulea</id>
+      <name>Cristian Sulea</name>
+      <email>cristian.sulea.79@gmail.com</email>
+      <url>http://cristian.sulea.net</url>
+      <timezone>Europe/Bucharest</timezone>
+      <roles>
+        <role>owner</role>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+
+  <scm>
+    <connection>scm:git:git@github.com:cristian-sulea/jatoo-image-metadata-exiftool.git</connection>
+    <developerConnection>scm:git:git@github.com:cristian-sulea/jatoo-image-metadata-exiftool.git</developerConnection>
+    <url>https://github.com/cristian-sulea/jatoo-image-metadata-exiftool</url>
+  </scm>
+
+
+  <dependencies>
+
+    <dependency>
+      <groupId>net.sulea.cristian</groupId>
+      <artifactId>jatoo-image</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sulea.cristian</groupId>
+      <artifactId>jatoo-exec</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+  </dependencies>
+
+</project>
