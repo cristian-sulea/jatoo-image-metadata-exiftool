@@ -81,8 +81,19 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
       int code = COMMAND.exec(buffer, arguments);
 
       if (code == 0) {
-        return buffer.toString();
-      } else {
+
+        String exec = buffer.toString();
+
+        if (exec.trim().length() == 0) {
+          return null;
+        }
+
+        else {
+          return exec;
+        }
+      }
+
+      else {
         throw new IOException("anormal exec termination (code = " + code + "): " + buffer.toString());
       }
     }
@@ -93,8 +104,12 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
     }
   }
 
+  private static String encloseArgument(String argument) {
+    return "\"" + argument + "\"";
+  }
+
   private static String fileToArgument(File file) {
-    return "\"" + file.getAbsolutePath() + "\"";
+    return encloseArgument(file.getAbsolutePath());
   }
 
   //
@@ -155,23 +170,19 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
     }
 
     catch (Throwable t) {
-      logger.warn("failed to parse the response: " + exec, t);
+      logger.info("failed to parse the response: " + exec, t);
       return null;
     }
   }
 
   @Override
+  public boolean setDateTimeOriginal(File image, Date date) {
+    return null != exec(encloseArgument("-DateTimeOriginal=" + SDF.format(date)), fileToArgument(image));
+  }
+
+  @Override
   public boolean copyMetadata(File srcImage, File dstImage) {
-
-    String exec = exec("-tagsfromfile", fileToArgument(srcImage), "-all:all", "-overwrite_original", fileToArgument(dstImage));
-
-    if (exec == null) {
-      return false;
-    }
-
-    else {
-      return true;
-    }
+    return null != exec("-tagsfromfile", fileToArgument(srcImage), "-all:all", "-overwrite_original", fileToArgument(dstImage));
   }
 
 }

@@ -16,6 +16,7 @@
 
 package jatoo.image.metadata.exiftool;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Assert;
@@ -30,6 +31,8 @@ import jatoo.image.ImageMetadataHandler;
  * @version 1.0, May 26, 2017
  */
 public class ExifToolImageMetadataHelperTest {
+
+  private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
 
   private static final String image1 = "target\\test-classes\\jatoo\\image\\metadata\\20141109144518-0.jpg";
   private static final String image2 = "target\\test-classes\\jatoo\\image\\metadata\\20141109144518-400x300.jpg";
@@ -56,6 +59,17 @@ public class ExifToolImageMetadataHelperTest {
     Date date2 = handler.getDateTimeOriginal(image2);
 
     Assert.assertEquals(date1, date2);
+  }
+
+  @Test
+  public void test3() throws Throwable {
+
+    Date date1 = new Date();
+    handler.setDateTimeOriginal(image2, date1);
+
+    Date date2 = handler.getDateTimeOriginal(image2);
+
+    Assert.assertEquals(SDF.format(date1), SDF.format(date2));
   }
 
 }
