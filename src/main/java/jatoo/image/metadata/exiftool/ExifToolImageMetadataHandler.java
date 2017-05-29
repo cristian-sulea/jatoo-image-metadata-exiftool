@@ -7,8 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -104,6 +108,29 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
     }
   }
 
+  private static List<String> execAndSplitForLines(String... arguments) {
+
+    String exec = exec(arguments);
+
+    if (exec == null) {
+      return null;
+    }
+
+    String[] split = exec.split("\\r\\n|\\n|\\r");
+    List<String> lines = new ArrayList<>(split.length);
+
+    for (String line : split) {
+
+      line = line.trim();
+
+      if (line.length() > 0) {
+        lines.add(line);
+      }
+    }
+
+    return lines;
+  }
+
   private static String encloseArgument(String argument) {
     return "\"" + argument + "\"";
   }
@@ -121,21 +148,15 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
   @Override
   public ImageMetadata getMetadata(final File image) {
 
-    String exec = exec("-S", fileToArgument(image));
+    List<String> lines = execAndSplitForLines("-S", fileToArgument(image));
 
-    if (exec == null) {
+    if (lines == null) {
       return null;
     }
 
     ImageMetadata metadata = new ImageMetadata();
 
-    for (String line : exec.split("\\r\\n|\\n|\\r")) {
-
-      line = line.trim();
-
-      if (line.length() == 0) {
-        continue;
-      }
+    for (String line : lines) {
 
       try {
 
@@ -159,18 +180,18 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
   @Override
   public Date getDateTimeOriginal(File image) {
 
-    String exec = exec("-DateTimeOriginal", "-s", "-S", fileToArgument(image));
+    String date = exec("-DateTimeOriginal", "-s", "-S", fileToArgument(image));
 
-    if (exec == null) {
+    if (date == null) {
       return null;
     }
 
     try {
-      return SDF.parse(exec);
+      return SDF.parse(date);
     }
 
     catch (Throwable t) {
-      logger.info("failed to parse the response: " + exec, t);
+      logger.info("failed to parse the response: " + date, t);
       return null;
     }
   }
@@ -178,6 +199,36 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
   @Override
   public boolean setDateTimeOriginal(File image, Date date) {
     return null != exec(encloseArgument("-DateTimeOriginal=" + SDF.format(date)), fileToArgument(image));
+  }
+
+  @Override
+  public Map<File, Date> getDateTimeOriginalForFolder(File folder) {
+
+    List<String> lines = execAndSplitForLines("-T", "-FileName", "-DateTimeOriginal", fileToArgument(folder));
+
+    if (lines == null) {
+      return null;
+    }
+
+    Map<File, Date> dates = new HashMap<>();
+
+    for (String line : lines) {
+
+      try {
+
+        String[] split = line.split("\t");
+        File file = new File(folder, split[0]);
+        Date date = SDF.parse(split[1]);
+
+        dates.put(file, date);
+      }
+
+      catch (Throwable t) {
+        logger.warn("failed to parse the line: " + line, t);
+      }
+    }
+
+    return dates;
   }
 
   @Override
