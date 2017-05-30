@@ -13,8 +13,8 @@
   <packaging>jar</packaging>
 
 
-  <name>JaToo Image Metadata</name>
-  <description>ExifTool implementation for the image metadata helper.</description>
+  <name>JaToo Image Metadata ExifTool</name>
+  <description>ExifTool implementation for the image metadata handler.</description>
   <url>http://cristian.sulea.net/projects/jatoo-image-metadata-exiftool/</url>
 
   <inceptionYear>2017</inceptionYear>
