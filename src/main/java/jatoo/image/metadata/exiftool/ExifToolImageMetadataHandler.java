@@ -183,6 +183,13 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
         if ("DateTimeOriginal".equals(key)) {
           metadata.setDateTimeOriginal(SDF.parse(value));
         }
+
+        else if ("ImageWidth".equals(key)) {
+          metadata.setImageWidth(Integer.parseInt(value));
+        } else if ("ImageHeight".equals(key)) {
+          metadata.setImageHeight(Integer.parseInt(value));
+        }
+
       }
 
       catch (Throwable t) {
