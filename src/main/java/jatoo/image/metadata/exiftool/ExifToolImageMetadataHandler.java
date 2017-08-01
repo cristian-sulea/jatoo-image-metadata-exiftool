@@ -41,7 +41,7 @@ import jatoo.image.ImageMetadataHandler;
  * ExifTool {@link ImageMetadataHelper} implementation.
  * 
  * @author <a href="http://cristian.sulea.net" rel="author">Cristian Sulea</a>
- * @version 1.0-SNAPSHOT, May 26, 2017
+ * @version 1.0-SNAPSHOT, 1.August, 2017
  */
 public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
 
@@ -166,34 +166,33 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
 
     List<String> lines = execAndSplitForLines("-S", fileToArgument(image));
 
-    if (lines == null) {
-      return null;
-    }
-
     ImageMetadata metadata = new ImageMetadata();
 
-    for (String line : lines) {
+    if (lines != null) {
 
-      try {
+      for (String line : lines) {
 
-        int index = line.indexOf(':');
-        String key = line.substring(0, index).trim();
-        String value = line.substring(index + 1).trim();
+        try {
 
-        if ("DateTimeOriginal".equals(key)) {
-          metadata.setDateTimeOriginal(SDF.parse(value));
+          int index = line.indexOf(':');
+          String key = line.substring(0, index).trim();
+          String value = line.substring(index + 1).trim();
+
+          if ("DateTimeOriginal".equals(key)) {
+            metadata.setDateTimeOriginal(SDF.parse(value));
+          }
+
+          else if ("ImageWidth".equals(key)) {
+            metadata.setImageWidth(Integer.parseInt(value));
+          } else if ("ImageHeight".equals(key)) {
+            metadata.setImageHeight(Integer.parseInt(value));
+          }
+
         }
 
-        else if ("ImageWidth".equals(key)) {
-          metadata.setImageWidth(Integer.parseInt(value));
-        } else if ("ImageHeight".equals(key)) {
-          metadata.setImageHeight(Integer.parseInt(value));
+        catch (Throwable t) {
+          logger.warn("failed to parse the line: " + line, t);
         }
-
-      }
-
-      catch (Throwable t) {
-        logger.warn("failed to parse the line: " + line, t);
       }
     }
 
