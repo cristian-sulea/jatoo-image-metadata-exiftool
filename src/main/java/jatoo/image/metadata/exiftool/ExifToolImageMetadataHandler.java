@@ -41,7 +41,7 @@ import jatoo.image.ImageMetadataHandler;
  * ExifTool {@link ImageMetadataHelper} implementation.
  * 
  * @author <a href="http://cristian.sulea.net" rel="author">Cristian Sulea</a>
- * @version 1.0-SNAPSHOT, 1.August, 2017
+ * @version 1.0-SNAPSHOT, 2 August, 2017
  */
 public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
 
@@ -220,7 +220,7 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
 
   @Override
   public boolean setDateTimeOriginal(File image, Date date) {
-    return null != exec(encloseArgument("-DateTimeOriginal=" + SDF.format(date)), fileToArgument(image));
+    return null != exec(encloseArgument("-DateTimeOriginal=" + SDF.format(date)), fileToArgument(image), "-overwrite_original");
   }
 
   @Override
