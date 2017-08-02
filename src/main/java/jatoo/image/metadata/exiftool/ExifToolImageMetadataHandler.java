@@ -41,7 +41,7 @@ import jatoo.image.ImageMetadataHandler;
  * ExifTool {@link ImageMetadataHelper} implementation.
  * 
  * @author <a href="http://cristian.sulea.net" rel="author">Cristian Sulea</a>
- * @version 1.0-SNAPSHOT, 2 August, 2017
+ * @version 1.0, 2 August, 2017
  */
 public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
 
@@ -55,7 +55,7 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
     if (new File("pom.xml").exists() && new File("src").exists()) {
       COMMAND.setFolder(new File("target/temp"));
     } else {
-      COMMAND.setFolder(new File("temp"));
+      COMMAND.setFolder(new File(System.getProperty("launch4j.exedir", System.getProperty("user.home")), ".exiftool"));
     }
 
     File commandFile = new File(COMMAND.getFolder(), COMMAND.getProgram());
