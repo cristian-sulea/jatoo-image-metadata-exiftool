@@ -41,7 +41,7 @@ import jatoo.image.ImageMetadataHandler;
  * ExifTool {@link ImageMetadataHelper} implementation.
  * 
  * @author <a href="http://cristian.sulea.net" rel="author">Cristian Sulea</a>
- * @version 1.0, 2 August, 2017
+ * @version 1.1, January 12, 2018
  */
 public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
 
@@ -102,9 +102,9 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
 
       if (code == 0) {
 
-        String exec = buffer.toString();
+        String exec = buffer.toString().trim();
 
-        if (exec.trim().length() == 0) {
+        if (exec.length() == 0) {
           return null;
         }
 
@@ -188,6 +188,9 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
             metadata.setImageHeight(Integer.parseInt(value));
           }
 
+          if ("Orientation".equals(key)) {
+            metadata.setOrientation(value);
+          }
         }
 
         catch (Throwable t) {
@@ -197,6 +200,11 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
     }
 
     return metadata;
+  }
+
+  @Override
+  public boolean copyMetadata(File srcImage, File dstImage) {
+    return null != exec("-tagsfromfile", fileToArgument(srcImage), "-all:all", "-overwrite_original", fileToArgument(dstImage));
   }
 
   @Override
@@ -254,8 +262,8 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
   }
 
   @Override
-  public boolean copyMetadata(File srcImage, File dstImage) {
-    return null != exec("-tagsfromfile", fileToArgument(srcImage), "-all:all", "-overwrite_original", fileToArgument(dstImage));
+  public String getOrientation(File image) {
+    return exec("-Orientation", "-s", "-S", fileToArgument(image));
   }
 
 }

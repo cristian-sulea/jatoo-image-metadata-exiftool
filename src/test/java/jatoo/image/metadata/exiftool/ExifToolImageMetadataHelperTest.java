@@ -24,13 +24,14 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import jatoo.image.ImageMetadata;
 import jatoo.image.ImageMetadataHandler;
 
 /**
  * JUnit tests for {@link ExifToolImageMetadataHelper}.
  * 
  * @author <a href="http://cristian.sulea.net" rel="author">Cristian Sulea</a>
- * @version 1.0, May 26, 2017
+ * @version 1.1, January 12, 2018
  */
 public class ExifToolImageMetadataHelperTest {
 
@@ -43,10 +44,10 @@ public class ExifToolImageMetadataHelperTest {
   @Test
   public void testGetMetadata() throws Throwable {
 
-    Date date1 = handler.getMetadata(image1).getDateTimeOriginal();
-    Date date2 = handler.getDateTimeOriginal(image1);
+    ImageMetadata metadata = handler.getMetadata(image1);
 
-    Assert.assertEquals(date1, date2);
+    Assert.assertEquals(metadata.getDateTimeOriginal(), handler.getDateTimeOriginal(image1));
+    Assert.assertEquals(metadata.getOrientation(), handler.getOrientation(image1));
   }
 
   @Test
