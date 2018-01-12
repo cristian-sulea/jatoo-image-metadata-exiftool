@@ -64,6 +64,18 @@ public class ExifToolImageMetadataHelperTest {
   }
 
   @Test
+  public void testRemoveMetadata() throws Throwable {
+
+    Assert.assertNotNull(handler.getMetadata(image1).getDateTimeOriginal());
+    Assert.assertNotNull(handler.getDateTimeOriginal(image1));
+
+    handler.removeMetadata(image1);
+
+    Assert.assertNull(handler.getMetadata(image1).getDateTimeOriginal());
+    Assert.assertNull(handler.getDateTimeOriginal(image1));
+  }
+
+  @Test
   public void testDateTimeOriginal() throws Throwable {
 
     SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");

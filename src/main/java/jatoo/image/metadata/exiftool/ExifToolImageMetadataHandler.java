@@ -41,7 +41,7 @@ import jatoo.image.ImageMetadataHandler;
  * ExifTool {@link ImageMetadataHelper} implementation.
  * 
  * @author <a href="http://cristian.sulea.net" rel="author">Cristian Sulea</a>
- * @version 1.1, January 12, 2018
+ * @version 1.2, January 12, 2018
  */
 public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
 
@@ -205,6 +205,11 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
   @Override
   public boolean copyMetadata(File srcImage, File dstImage) {
     return null != exec("-tagsfromfile", fileToArgument(srcImage), "-all:all", "-overwrite_original", fileToArgument(dstImage));
+  }
+
+  @Override
+  public boolean removeMetadata(File image) {
+    return null != exec("-all=", "-overwrite_original", fileToArgument(image));
   }
 
   @Override
