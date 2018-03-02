@@ -41,12 +41,14 @@ import jatoo.image.ImageMetadataHandler;
  * ExifTool {@link ImageMetadataHelper} implementation.
  * 
  * @author <a href="http://cristian.sulea.net" rel="author">Cristian Sulea</a>
- * @version 1.2, January 12, 2018
+ * @version 1.3, March 2, 2018
  */
 public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
 
   /** The logger. */
   private static final Log logger = LogFactory.getLog(ExifToolImageMetadataHandler.class);
+
+  private static String NOT_IMPLEMENTED_EXCEPTION_TEXT = "method not implemented, or operation not supported";
 
   private static final Command COMMAND = new Command("exiftool-10.52.exe");
 
@@ -179,7 +181,7 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
           String value = line.substring(index + 1).trim();
 
           if ("DateTimeOriginal".equals(key)) {
-            metadata.setDateTimeOriginal(SDF.parse(value));
+            metadata.setDateTaken(SDF.parse(value));
           }
 
           else if ("ImageWidth".equals(key)) {
@@ -213,7 +215,7 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
   }
 
   @Override
-  public Date getDateTimeOriginal(File image) {
+  public Date getDateTaken(File image) {
 
     String date = exec("-DateTimeOriginal", "-s", "-S", fileToArgument(image));
 
@@ -232,12 +234,12 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
   }
 
   @Override
-  public boolean setDateTimeOriginal(File image, Date date) {
+  public boolean setDateTaken(File image, Date date) {
     return null != exec(encloseArgument("-DateTimeOriginal=" + SDF.format(date)), fileToArgument(image), "-overwrite_original");
   }
 
   @Override
-  public Map<File, Date> getDateTimeOriginalForFolder(File folder) {
+  public Map<File, Date> getDateTakenForFolder(File folder) {
 
     List<String> lines = execAndSplitForLines("-T", "-FileName", "-DateTimeOriginal", fileToArgument(folder));
 
@@ -267,8 +269,9 @@ public class ExifToolImageMetadataHandler extends ImageMetadataHandler {
   }
 
   @Override
-  public String getOrientation(File image) {
-    return exec("-Orientation", "-s", "-S", fileToArgument(image));
+  public int getOrientation(File image) {
+    // return exec("-Orientation", "-s", "-S", fileToArgument(image));
+    throw new IllegalStateException(NOT_IMPLEMENTED_EXCEPTION_TEXT);
   }
 
 }

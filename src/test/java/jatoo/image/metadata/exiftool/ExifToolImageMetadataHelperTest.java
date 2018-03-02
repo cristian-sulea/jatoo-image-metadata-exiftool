@@ -46,19 +46,21 @@ public class ExifToolImageMetadataHelperTest {
 
     ImageMetadata metadata = handler.getMetadata(image1);
 
-    Assert.assertEquals(metadata.getDateTimeOriginal(), handler.getDateTimeOriginal(image1));
+    Assert.assertEquals(metadata.getDateTaken(), handler.getDateTaken(image1));
     Assert.assertEquals(metadata.getOrientation(), handler.getOrientation(image1));
   }
 
   @Test
   public void testCopyMetadata() throws Throwable {
 
+    Assert.assertNull(handler.getDateTaken(image2));
+
     handler.copyMetadata(image1, image2);
 
-    Assert.assertNotNull(handler.getDateTimeOriginal(image2));
+    Assert.assertNotNull(handler.getDateTaken(image2));
 
-    Date date1 = handler.getMetadata(image1).getDateTimeOriginal();
-    Date date2 = handler.getDateTimeOriginal(image2);
+    Date date1 = handler.getMetadata(image1).getDateTaken();
+    Date date2 = handler.getDateTaken(image2);
 
     Assert.assertEquals(date1, date2);
   }
@@ -66,13 +68,13 @@ public class ExifToolImageMetadataHelperTest {
   @Test
   public void testRemoveMetadata() throws Throwable {
 
-    Assert.assertNotNull(handler.getMetadata(image1).getDateTimeOriginal());
-    Assert.assertNotNull(handler.getDateTimeOriginal(image1));
+    Assert.assertNotNull(handler.getMetadata(image1).getDateTaken());
+    Assert.assertNotNull(handler.getDateTaken(image1));
 
     handler.removeMetadata(image1);
 
-    Assert.assertNull(handler.getMetadata(image1).getDateTimeOriginal());
-    Assert.assertNull(handler.getDateTimeOriginal(image1));
+    Assert.assertNull(handler.getMetadata(image1).getDateTaken());
+    Assert.assertNull(handler.getDateTaken(image1));
   }
 
   @Test
@@ -83,12 +85,12 @@ public class ExifToolImageMetadataHelperTest {
     Date date1, date2;
 
     date1 = new Date();
-    handler.setDateTimeOriginal(image2, date1);
-    date2 = handler.getDateTimeOriginal(image2);
+    handler.setDateTaken(image2, date1);
+    date2 = handler.getDateTaken(image2);
     Assert.assertEquals(dateFormatter.format(date1), dateFormatter.format(date2));
 
-    handler.setDateTimeOriginal(image2, 2011, 11, 11, 11, 11, 11);
-    date2 = handler.getDateTimeOriginal(image2);
+    handler.setDateTaken(image2, 2011, 11, 11, 11, 11, 11);
+    date2 = handler.getDateTaken(image2);
     Assert.assertEquals("2011:11:11 11:11:11", dateFormatter.format(date2));
   }
 
@@ -97,10 +99,10 @@ public class ExifToolImageMetadataHelperTest {
 
     SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
 
-    handler.setDateTimeOriginal(image1, 2011, 11, 11, 11, 11, 11);
-    handler.setDateTimeOriginal(image2, 2012, 12, 12, 12, 12, 12);
+    handler.setDateTaken(image1, 2011, 11, 11, 11, 11, 11);
+    handler.setDateTaken(image2, 2012, 12, 12, 12, 12, 12);
 
-    Map<File, Date> dates = handler.getDateTimeOriginalForFolder(folder);
+    Map<File, Date> dates = handler.getDateTakenForFolder(folder);
 
     Assert.assertEquals("2011:11:11 11:11:11", dateFormatter.format(dates.get(new File(image1))));
     Assert.assertEquals("2012:12:12 12:12:12", dateFormatter.format(dates.get(new File(image2))));
